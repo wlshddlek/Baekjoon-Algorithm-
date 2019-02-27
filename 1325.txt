@@ -1,0 +1,77 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+using namespace std;
+vector<int> a[10005];
+bool check[10005];
+bool check2[10005];
+int result[10005];
+queue<int> q;
+int n;
+int bfs(int start)
+{
+	fill(check, check + n+1, false);
+	int count = 0;
+	q.push(start);
+	check[start] = true;
+	//check2[start] = true;
+	while (!q.empty())
+	{
+		int node = q.front();
+		q.pop();
+		
+		count++;
+		for (int i = 0; i < a[node].size(); i++)
+		{
+			int nextnode = a[node][i];
+			if (check[nextnode] == true)continue;
+
+			check[nextnode] = true;
+			//check2[nextnode] = true;
+			q.push(nextnode);
+
+		}
+
+	}
+	
+	return count;
+
+
+
+}
+int main()
+{
+	int m;
+	cin >> n >> m;
+	for (int i = 0; i < m; i++)
+	{
+		int node1, node2;
+		cin >> node1 >> node2;
+		a[node2].push_back(node1);
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		
+		//if (check2[i] == true)continue;
+		result[i] = bfs(i);
+		
+	}
+	int max = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		if (max < result[i])
+		{
+			max = result[i];
+		}
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		if (max == result[i])
+		{
+			printf("%d ", i);
+		}
+	}
+
+	return 0;
+}

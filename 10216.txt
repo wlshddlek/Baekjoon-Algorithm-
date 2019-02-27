@@ -1,0 +1,95 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+using namespace std;
+class enemy
+{
+public:
+	int x;
+	int y;
+	int r;
+	enemy(int a, int b, int c)
+	{
+		x = a;
+		y = b;
+		r = c;
+	}
+};
+vector<int> a[3005];
+vector<enemy> buffer;
+vector<bool> check;
+void bfs(int start)
+{
+	queue<int> q;
+	q.push(start);
+	check[start] = true;
+	while (!q.empty())
+	{
+		int node = q.front();
+		q.pop();
+
+		for (int i = 0; i < a[node].size(); i++)
+		{
+			int nextnode = a[node][i];
+			if (check[nextnode] == true)continue;
+			check[nextnode] = true;
+			q.push(nextnode);
+		}
+	}
+}
+int main()
+{
+	int nn;
+	cin >> nn;
+	for (int i = 0; i < nn; i++)
+	{
+		int n;
+		cin >> n;
+		for (int j=0; j < n; j++)
+		{
+			int x, y, r;
+			cin >> x >> y >> r;
+			buffer.push_back( enemy(x, y, r));
+			check.push_back(0);
+		}
+
+		for (int i = 0; i < n-1; i++)
+		{
+			for (int j = i + 1; j < n; j++)
+			{
+				int x1 = buffer[i].x;
+				int y1 = buffer[i].y;
+				int r1 = buffer[i].r;
+				int x2 = buffer[j].x;
+				int y2 = buffer[j].y;
+				int r2 = buffer[j].r;
+
+				if ((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2) <= (r1 + r2)*(r1+r2))
+				{
+					a[i].push_back(j);
+					a[j].push_back(i);
+				}
+
+			}
+		}	
+		int count = 0;
+		for (int i = 0; i < n; i++)
+		{
+			if (check[i] == false)
+			{
+				bfs(i);
+				
+				count++;
+			}
+
+		}
+		printf("%d\n", count);
+		check.clear();
+		buffer.clear();
+		for (int i = 0; i < n; i++)
+		{
+			a[i].clear();
+		}
+	}
+	return 0;
+}

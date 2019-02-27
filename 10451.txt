@@ -1,0 +1,42 @@
+#include<iostream>
+using namespace std;
+int buffer[1005];
+bool check[1005];
+void dfs(int start)
+{
+
+	if (check[start] == true)return;
+	check[start] = true;
+	dfs(buffer[start]);
+
+}
+int main()
+{
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		int m;
+		cin >> m;
+		
+		for (int j = 1; j <= m; j++)
+		{
+			cin >> buffer[j];
+		}
+		int count = 0;
+		for (int j = 1; j <= m; j++)
+		{
+			if (check[j] == false)
+			{
+				
+				dfs(j);
+			
+				count++;
+			}
+		}
+		printf("%d\n", count);
+		fill(buffer, buffer + m+1, 0);
+		fill(check, check + m + 1, false);
+	}
+	return 0;
+}

@@ -1,0 +1,66 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+#include<string>
+using namespace std;
+int map[27][27];
+int dir[4][2] = { {-1,0},{0,1},{1,0},{0,-1} };
+int n;
+vector<int> v;
+int bfs(int x,int y)
+{
+	queue<pair<int,int>> q;
+	q.push(make_pair(x,y));
+	int count = 0;
+	map[x][y] = 2;
+	while (!q.empty())
+	{
+		int currentx = q.front().first;
+		int currenty = q.front().second;
+		q.pop();
+		count++;
+		for (int d = 0; d < 4; d++)
+		{
+			int nextx = currentx + dir[d][0];
+			int nexty = currenty + dir[d][1];
+			if (nextx < 0 || nexty < 0 || nextx >= n || nexty >= n)continue;
+			if (map[nextx][nexty] !=1)continue;
+			map[nextx][nexty] = 2;
+			q.push(make_pair(nextx, nexty));
+		}
+	}
+	return count;
+}
+int main()
+{
+	
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		string str;
+		cin >> str;
+		for (int j = 0; j< n; j++)
+		{
+			map[i][j] = str[j]-'0';
+		}
+	}
+
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			if (map[i][j] !=1)continue;
+			int result=bfs(i, j);
+			v.push_back(result);
+		}
+	}
+	sort(v.begin(), v.end());
+	printf("%d\n", v.size());
+	for (int i = 0; i < v.size(); i++)
+	{
+		printf("%d\n", v[i]);
+	}
+
+	return 0;
+}
