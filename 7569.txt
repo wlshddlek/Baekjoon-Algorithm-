@@ -1,0 +1,94 @@
+#include<iostream>
+#include<queue>
+using namespace std;
+class tom {
+
+public:
+	int x;
+	int y;
+	int h;
+	tom(int a, int b, int c)
+	{
+		x = a;
+		y = b;
+		h = c;
+	}
+};
+queue<tom> q;
+int d[4][2] = { {-1,0},{0,1},{1,0},{0,-1} };
+int hh[2] = { -1,1 };
+int buffer[105][105][105];
+int main()
+{
+	int count = 0;
+	int m, n, h;
+	cin >> m >> n >> h;
+	for (int k = 0; k < h; k++)
+	{
+		for (int i = 0; i < n; i++)
+		{
+			for (int j = 0; j < m; j++)
+			{
+				cin >> buffer[i][j][k];
+				if (buffer[i][j][k] == 1)
+				{
+					q.push(tom(i, j, k));
+				}
+			}
+		}
+	}
+	while (!q.empty())
+	{
+		int levelsize = q.size();
+		for (int i = 0; i < levelsize; i++)
+		{
+			int x = q.front().x;
+			int y = q.front().y;
+			int currenth = q.front().h;
+			q.pop();
+			
+				for (int j = 0; j < 4; j++)
+				{
+					int newx = x + d[j][0];
+					int newy = y + d[j][1];
+					
+					if (newx < 0 || newx >= n || newy < 0 || newy >= m ||buffer[newx][newy][currenth]!=0)continue;
+					
+					
+					q.push(tom(newx, newy, currenth));
+					
+					buffer[newx][newy][currenth] = 1;
+								
+				}
+				for (int k = 0; k < 2; k++)
+				{
+					int newh = currenth + hh[k];
+					if (newh < 0 || newh >= h || buffer[x][y][newh] != 0)continue;
+					q.push(tom(x, y, newh));
+					buffer[x][y][newh] = 1;
+				}
+
+		}
+		count++;
+	}
+	int check = 0;
+	for (int k = 0; k < h; k++)
+	{
+		for (int i = 0; i < n; i++)
+		{
+			for (int j = 0; j < m; j++)
+			{
+				if (buffer[i][j][k] == 0)
+				{
+					check = 1;
+				}
+			}
+		}
+	}
+	if (check == 1)printf("-1");
+	else
+	{
+		printf("%d ", count-1);
+	}
+	return 0;
+}
