@@ -1,0 +1,90 @@
+#include<iostream>
+#include<deque>
+#include<string>
+using namespace std;
+
+deque<int> v;
+int main()
+{
+	int test;
+	cin >> test;
+	for (int i = 0; i < test; i++)
+	{
+		string command;
+		cin >> command;
+		int n;
+		cin >> n;
+		string str;
+		cin >> str;
+		string num = "";
+		for (int i = 1; i < str.size(); i++)                //숫자만골라서 배열에 저장
+		{
+			if (str[i] >= '0'&&str[i] <= '9')
+			{
+				num += str[i];
+			}
+			else                                //숫자가끝나면 배열에 저장
+			{
+				if (num == "")break;
+				v.push_back(stoi(num));
+				num = "";
+			}
+		}
+
+		int state = 0;  //0이면 정방향, 1이면 역방향
+		bool check = true;
+		for (int i = 0; i < command.size(); i++)
+		{
+			if (command[i] == 'R')         //R이면 방향 바꾸기
+			{
+				state = (state + 1) % 2;
+				continue;
+			}
+			if (v.empty())        //비어있는데 D이면 실패
+			{
+				check = false;
+				break;
+			}
+			if (state == 0)           //D일때 정방향이면
+			{
+				v.pop_front();
+			}
+			else                     //D일때 역방향이면
+			{
+				v.pop_back();
+			}
+		}
+		if (check == false)            //실패이면 error 출력
+		{
+			printf("error\n");
+			continue;
+		}
+
+		if (v.empty())       //비어있으면 빈거출력
+		{
+			printf("[]\n");
+		}
+		else if (state == 0)               //정방향으로 출력
+		{
+
+			printf("[%d", v[0]);
+			for (int i = 1; i < v.size(); i++)
+			{
+				printf(",%d", v[i]);
+			}
+			printf("]\n");
+
+		}
+		else                        //역방향으로 출력
+		{
+			printf("[%d", v[v.size() - 1]);
+			for (int i = v.size() - 2; i >= 0; i--)
+			{
+				printf(",%d", v[i]);
+			}
+			printf("]\n");
+		}
+		v.clear();
+	}
+	return 0;
+}

@@ -1,0 +1,159 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+struct node
+{
+	int data;
+	struct node* next;
+	struct node* pre;
+};
+struct node* head=NULL;
+struct node* tail=NULL;
+int deque_size = 0;
+struct node* make_node(int num)
+{
+	struct node* tmp = (struct node*)malloc(sizeof(struct node));
+	tmp->data = num;
+	tmp->next = NULL;               //이따 지워보기
+	tmp->pre = NULL;
+	return tmp;
+}
+void push_front(int num)
+{
+	struct node* newnode = make_node(num);
+	if (head == NULL)      //비어있을 때
+	{
+		head = newnode;
+		tail = newnode;
+	}
+	else
+	{
+		newnode->next = head;
+		head = newnode;
+		newnode->next->pre = newnode;
+	}
+	deque_size++;
+}
+void push_back(int num)
+{
+	struct node* newnode = make_node(num);
+	if (head == NULL)
+	{
+		head = newnode;
+		tail = newnode;
+	}
+	else
+	{
+		newnode->pre = tail;
+		tail = newnode;
+		newnode->pre->next = newnode;
+	}
+	deque_size++;
+}
+void pop_front()
+{
+	if (deque_size == 0)    // 비어있을 때
+	{
+		printf("-1\n");
+	}
+	else if (deque_size == 1)
+	{
+		struct node* tmp = head;
+		printf("%d\n", tmp->data);
+		head == NULL;
+		tail == NULL;
+		free(tmp);            //메모리 반환
+		deque_size--;
+	}
+	else
+	{
+		struct node* tmp = head;
+		printf("%d\n", tmp->data);
+		head = head->next;
+		free(tmp);
+		deque_size--;
+	}
+}
+void pop_back()
+{
+	if (deque_size == 0)
+	{
+		printf("-1\n");
+	}
+	else if (deque_size == 1)
+	{
+		struct node* tmp = tail;
+		printf("%d\n", tmp->data);
+		tail = NULL;
+		head = NULL;
+		free(tmp);
+		deque_size--;
+	}
+	else
+	{
+		struct node* tmp = tail;
+		printf("%d\n", tmp->data);
+		tail = tail->pre;
+		deque_size--;
+		free(tmp);
+	}
+}
+void front()
+{
+	if (deque_size == 0)printf("-1\n");
+	else printf("%d\n", head->data);
+}
+void back()
+{
+	if (deque_size == 0)printf("-1\n");
+	else printf("%d\n", tail->data);
+}
+int main()
+{
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		string command;
+		cin >> command;
+		if (command.compare("push_front") == 0)
+		{
+			int num;
+			cin >> num;
+			push_front(num);
+		}
+		else if (command.compare("push_back") == 0)
+		{
+			int num;
+			cin >> num;
+			push_back(num);
+		}
+		else if (command.compare("size") == 0)
+		{
+			printf("%d\n", deque_size);
+		}
+		else if (command.compare("pop_front") == 0)
+		{
+			pop_front();
+		}
+		else if (command.compare("pop_back") == 0)
+		{
+			pop_back();
+		}
+		else if (command.compare("empty") == 0)
+		{
+			if (deque_size == 0)printf("1\n");
+			else printf("0\n");
+		}
+		else if (command.compare("front") == 0)
+		{
+			front();
+		}
+		else if (command.compare("back") == 0)
+		{
+			back();
+		}
+	}
+	return 0;
+}
