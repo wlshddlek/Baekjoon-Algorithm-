@@ -1,0 +1,61 @@
+#include<iostream>
+#include<string>
+#include<stack>
+using namespace std;
+stack<char> s;
+int main()
+{
+	string str;
+	cin >> str;
+	int level = 1;
+	int result = 0;
+	bool check = true;
+	char pre = '(';
+	for (int i = 0; i < str.size(); i++)
+	{
+		char c = str[i];
+		if (c == '(')          //( 일 경우 *2 수준 층으로ㄱㄱ
+		{
+			level *= 2;
+			s.push(c);
+		}
+		else if (c == '[')    //[ 일경우 *3 수준 층으로 ㄱㄱ 
+		{
+			level *= 3;
+			s.push(c);
+		}
+		else if (c == ')')
+		{
+			if (s.empty() || s.top() != '(') //잘못된 괄호열일경우 체크
+			{
+				check = false;
+				break;
+			}
+			s.pop();
+			if (pre == '(')   //'(' 다음 오는것만 계산, 나머지는 넘김 -> ),] 다음에 오는건 그냥 껍데기 
+			{
+				result += level;
+			}
+			level /= 2;        //전 층으로 올라가기
+		}
+		else if (c == ']')
+		{
+			if (s.empty() || s.top() != '[')
+			{
+				check = false;
+				break;
+			}
+			s.pop();
+			if (pre == '[')
+			{
+				result += level;
+			}
+			level /= 3;
+		}
+		pre = c;
+	}
+
+	if (check == false || !s.empty())printf("0\n");   //올바르지못하면 0
+	else printf("%d ", result);
+	return 0;
+}
