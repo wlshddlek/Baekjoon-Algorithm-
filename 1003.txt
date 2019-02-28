@@ -1,5 +1,5 @@
 #include<iostream>
-using namespace std;
+using namespace std;  //
 int buffer[1005];
 bool check[1005];
 void dfs(int start)
