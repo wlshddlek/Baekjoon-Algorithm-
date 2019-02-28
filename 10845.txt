@@ -1,0 +1,62 @@
+#include<iostream>
+#include<string>
+using namespace std;
+int buffer[10002];
+int front = 0;
+int back = 0;
+bool isempty()
+{
+	if (front == back)return true;
+
+	return false;
+}
+int main()
+{
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		string command;
+		cin >> command;
+		if (command.compare("push") == 0)
+		{
+			int num;
+			cin >> num;
+			buffer[back++] = num;
+		}
+		else if (command.compare("pop") == 0)
+		{
+			if (isempty())printf("-1\n");
+			else
+			{
+				printf("%d\n", buffer[front]);
+				front++;
+			}
+		}
+		else if (command.compare("size") == 0)
+		{
+			printf("%d\n", back - front);
+		}
+		else if (command.compare("empty") == 0)
+		{
+			printf("%d\n", isempty());
+		}
+		else if (command.compare("front") == 0)
+		{
+			if (isempty())printf("-1\n");
+			else
+			{
+				printf("%d\n", buffer[front]);
+			}
+		}
+		else if (command.compare("back") == 0)
+		{
+			if (isempty())printf("-1\n");
+			else
+			{
+				printf("%d\n", buffer[back - 1]);
+			}
+		}
+	}
+	return 0;
+}

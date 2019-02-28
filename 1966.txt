@@ -1,0 +1,58 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+#include<algorithm>
+using namespace std;
+int compare(int a, int b)
+{
+	return a > b;
+}
+int main()
+{
+	int test;
+	cin >> test;
+	for (int i = 0; i < test; i++)
+	{
+		queue<pair<int,int>> q;
+		vector<int> v;
+		int n, m;
+		cin >> n >> m;  
+		for (int j = 0; j < n; j++)   
+		{
+			int num;
+			cin >> num;
+			v.push_back(num);
+			if (j == m)
+			{
+				q.push(make_pair(num, 1));  //원하는 문서만 표시해두기
+				continue;
+			}
+			q.push(make_pair(num,0));
+		}
+		
+		sort(v.begin(), v.end(),compare);   // 매번 뽑을때마다 최대값을 비교할 필요없이 벡터에서 정렬을 해놓으면 계속 최대값확인 가능 
+		
+		int index = 0;
+		int maxx = v[index];
+		int count = 0;
+		while (1)
+		{
+			if (q.front().first != maxx)     //최대값이 아니면 뒤로 보내기
+			{
+				pair<int,int> tmp = q.front();
+				q.pop();
+				q.push(tmp);
+			}
+			else                                //최대값이면 뽑아내면서 총 카운트 증가
+			{
+				count++;
+				if (q.front().second == 1)break;    //원한는 문서면 while 탈출
+				q.pop();
+				index++;
+				maxx = v[index];              //그 다음 최대값 확인
+			}
+		}
+		printf("%d\n", count);
+	}
+	return 0;
+}

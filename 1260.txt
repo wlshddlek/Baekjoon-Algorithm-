@@ -1,0 +1,66 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+using namespace std;
+vector<int> a[1005];
+bool check[1005];
+void bfs(int start)
+{ 
+	queue<int> q;
+	q.push(start);
+	check[start] = true;
+	while (!q.empty())
+	{
+		int node = q.front();
+		q.pop();
+		printf("%d ", node);
+		for (int i = 0; i < a[node].size(); i++)
+		{
+			int nextnode = a[node][i];
+			if (check[nextnode] == true)continue;
+			check[nextnode] = true;
+			q.push(nextnode);
+
+		}
+
+	}
+
+}
+void dfs(int start)
+{
+	printf("%d ", start);
+	check[start] = true;
+	for (int i = 0; i < a[start].size();i++)
+	{
+		int nextnode = a[start][i];
+		if (check[nextnode] == true)continue;
+		dfs(nextnode);
+
+	}
+	return;
+}
+int main()
+{
+	int n, m, start;
+	cin >> n >> m >> start;
+
+	for (int i = 0; i < m; i++)
+	{
+		int n1, n2;
+		cin >> n1 >> n2;
+		a[n1].push_back(n2);
+		a[n2].push_back(n1);
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		sort(a[i].begin(), a[i].end());
+	}
+
+	dfs(start);
+	fill(check, check + 1005, false);
+	printf("\n");
+	bfs(start);
+	
+	return 0;
+}
