@@ -1,0 +1,27 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int buffer[1005][3];
+int main()
+{
+	int n;
+	cin >> n;
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			cin>>buffer[i][j];
+		}
+	}
+	for (int i = 2; i <= n; i++)
+	{
+		buffer[i][0] += min(buffer[i - 1][1], buffer[i - 1][2]);
+		buffer[i][1] += min(buffer[i - 1][0], buffer[i - 1][2]);
+		buffer[i][2] += min(buffer[i - 1][0], buffer[i - 1][1]);
+	}
+	int minn = min(buffer[n][0], buffer[n][1]);
+	minn = min(minn, buffer[n][2]);
+	printf("%d ", minn);
+
+	return 0;
+}

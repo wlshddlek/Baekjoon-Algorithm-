@@ -1,0 +1,32 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int d[1000005];
+int main()
+{
+	int x;
+	int count = 0;
+	cin >> x;
+	d[1] = 0;
+	d[2] = 1;
+
+	for (int i = 2; i <= x; i++)
+	{
+		int minn = 9000000;
+		if (i % 3 == 0)
+		{
+			minn= min(minn,d[i / 3]+1);
+		}
+
+		if (i % 2 == 0)
+		{
+			minn = min(minn, d[i / 2] + 1);
+		}
+
+		minn = min(minn, d[i - 1] + 1);
+		d[i] = minn;
+
+	}
+	printf("%d ", d[x]);
+	return 0;
+}

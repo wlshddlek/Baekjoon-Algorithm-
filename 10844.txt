@@ -1,0 +1,34 @@
+#include<iostream>
+
+using namespace std;
+
+long long int buffer[105][10];
+int main()
+{
+	int n;
+	cin >> n;
+	for (int i = 0; i <= 9; i++)
+	{
+		buffer[1][i] = 1;
+	}
+	for (int i = 2; i <= n; i++)
+	{
+		buffer[i][0] = buffer[i - 1][1];
+		buffer[i][9] = buffer[i - 1][8];
+		for (int j = 1; j <=8; j++)
+		{
+			buffer[i][j] += (buffer[i - 1][j - 1])%1000000000;
+			buffer[i][j] += (buffer[i - 1][j + 1])%1000000000;
+		}
+	}
+	long long int sum = 0;
+	for (int i = 1; i <= 9; i++)
+	{
+		sum += buffer[n][i];	
+		
+	}
+
+	printf("%lld ", sum%1000000000);
+
+	return 0;
+}

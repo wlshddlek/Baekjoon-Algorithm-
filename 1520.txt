@@ -1,0 +1,50 @@
+#include<iostream>
+#include<queue>
+using namespace std;
+
+int n, m;
+int buffer[502][502];
+long long int result[502][502];
+bool check[502][502];
+int d[4][2] = { {-1,0},{0,1},{1,0},{0,-1} };
+
+
+void dfs(int x, int y)
+{
+	if (x == n - 1 && y == m - 1)
+	{
+		return;
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		int nextx = x + d[i][0];
+		int nexty = y + d[i][1];
+		if (nextx < 0 || nexty < 0 || nextx >= n || nexty >= m)continue;
+		if (buffer[nextx][nexty] >= buffer[x][y])continue;
+		if (check[nextx][nexty]==false)
+		{
+			dfs(nextx, nexty);
+			check[nextx][nexty] = true;
+		}
+		result[x][y] += result[nextx][nexty];
+	}
+
+}
+
+int main()
+{
+	cin >> n >> m;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			cin >> buffer[i][j];
+		}
+	}
+	result[n - 1][m - 1] = 1;
+	dfs(0, 0);
+
+	printf("%lld ", result[0][0]);
+
+	return 0;
+}

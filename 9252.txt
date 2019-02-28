@@ -1,0 +1,62 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+using namespace std;
+int buffer[1005][1005];
+char stringa[1005];
+char stringb[1005];
+int main()
+{
+	string a, b;
+	cin >> a >> b;
+	for (int i = 0; i < a.size(); i++)
+	{
+		stringa[i + 1] = a[i];
+	}
+	for (int i = 0; i < b.size(); i++)
+	{
+		stringb[i + 1] = b[i];
+	}
+	for (int i = 1; i<=a.size(); i++)
+	{
+		for (int j = 1; j<=b.size(); j++)
+		{
+			if (stringa[i] == stringb[j])
+			{
+				buffer[i][j] = buffer[i - 1][j - 1] + 1;
+				
+			}
+			else
+			{
+				buffer[i][j] = max(buffer[i - 1][j], buffer[i][j - 1]);
+			}
+		}
+	}
+	printf("%d\n", buffer[a.size()][b.size()]);
+	int x = a.size();
+	int y = b.size();
+	string result = "";
+	while (1)
+	{
+		if (x == 0 || y == 0)break;
+		if (buffer[x][y] == buffer[x - 1][y])
+		{
+			x = x - 1;
+		}
+		else if (buffer[x][y] == buffer[x][y - 1])
+		{
+			y = y - 1;
+		}
+		else
+		{
+			result = stringa[x] + result;
+			x = x - 1;
+			y = y - 1;	
+		}
+	}
+	cout << result;
+	
+
+
+	return 0;
+}

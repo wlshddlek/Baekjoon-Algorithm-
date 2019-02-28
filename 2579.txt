@@ -1,0 +1,26 @@
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+int d[302];
+int buffer[302];
+
+int main()
+{
+	int n;
+	cin >> n;
+	for (int i = 1; i <= n; i++)
+	{
+		cin >> buffer[i];
+	}
+	d[0] = 0;
+	d[1] = buffer[1];
+	d[2] = buffer[2]+buffer[1];
+	for (int i = 3; i <= n; i++)
+	{
+		d[i] = max(d[i - 2], d[i - 3] + buffer[i-1]); 
+		d[i] += buffer[i];
+	}
+	printf("%d ", d[n]);
+	return 0;
+}

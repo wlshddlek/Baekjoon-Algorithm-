@@ -1,0 +1,42 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int buffer[505][505];
+int main()
+{
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j <= i; j++)
+		{
+			cin >> buffer[i][j];
+		}
+	}
+	for (int i = 1; i < n; i++)
+	{
+		for (int j = 0; j <= i; j++)
+		{
+			if (j == 0)
+			{
+				buffer[i][j] += buffer[i - 1][j];
+			}
+			else if (j == i)
+			{
+				buffer[i][j] += buffer[i - 1][j - 1];
+			}
+			else
+			{
+				buffer[i][j] += max(buffer[i - 1][j - 1], buffer[i - 1][j]);
+			}
+		}
+	}
+	int maxx = 0;
+	for (int i = 0; i < n; i++)
+	{
+		maxx = max(buffer[n-1][i], maxx);
+	}
+	printf("%d ", maxx);
+	return 0;
+}

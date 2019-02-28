@@ -1,0 +1,56 @@
+#include<iostream>
+
+#include<algorithm>
+using namespace std;
+
+int buffer[505][505];
+int page[505];
+int sum[505];
+
+int func(int start, int end)
+{
+	if (start == end)
+	{
+		return 0;
+	}
+	if (buffer[start][end] != 0)return buffer[start][end];
+	
+	int minn = 1000000000;
+	for (int mid = start; mid < end; mid++)
+	{
+		int a=func(start, mid);
+		int b=func(mid + 1, end);
+		minn = min(minn, a + b);
+		
+	}
+	int sum2 = sum[end] - sum[start - 1];
+
+	 return buffer[start][end] = minn + sum2;
+}
+int main()
+{
+	int test;
+	cin >> test;
+	for (int i = 0; i < test; i++)
+	{
+		int n;
+		cin >> n;
+		for (int j = 1; j <= n; j++)
+		{
+			cin>>page[j];
+		}
+		
+		sum[0] = 0;
+		for (int j = 1; j <= n; j++)
+		{
+			sum[j] = sum[j - 1] + page[j];
+		}
+		
+		printf("%d ",func(1,n));
+		
+			fill(&buffer[0][0], &buffer[n+1][n+1], 0);
+		
+	}
+
+	return 0;
+}
