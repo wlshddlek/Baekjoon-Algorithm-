@@ -1,0 +1,23 @@
+#include<iostream>
+using namespace std;
+int buffer[102];
+int gcd(int a, int b)
+{
+	if (b == 0)return a;
+	return gcd(b, a%b);
+}
+int main()
+{
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> buffer[i];
+	}
+	for (int i = 1; i < n; i++)
+	{
+		int G = gcd(buffer[0], buffer[i]);
+		printf("%d/%d\n", buffer[0] / G, buffer[i] / G);
+	}
+	return 0;
+}

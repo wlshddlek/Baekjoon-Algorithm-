@@ -1,0 +1,49 @@
+#include<iostream>
+#include<vector>
+#include<deque>
+#include<cmath>
+using namespace std;
+int buffer[102];
+deque<int>result;
+vector<int>v;
+int gcd(int a, int b)
+{
+	if (b == 0)return a;
+	return gcd(b, a%b);
+}
+int main()
+{
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> buffer[i];
+	}
+	for (int i = 1; i < n; i++)  // 숫자들 차이 저장
+	{
+		v.push_back(abs(buffer[i] - buffer[i - 1]));
+	}
+	int G=v[0];
+	for (int i = 1; i < v.size(); i++)  //차이들의 최대공약수 저장
+	{
+		G = gcd(v[i], G);
+	}
+	for (int i = 2; i*i <= G; i++) //G까지 다하면 시간초과나서 G제곱근까지만
+	{
+		if (G%i == 0)   //약수들 확인
+		{
+			if ((G / i) != i)  //G제곱근 전꺼는 출력
+			{
+				printf("%d ", i);
+			}
+			result.push_front(G / i);  //G제곱근과 그 후꺼는 저장
+			
+		}
+	}
+	for (int i = 0; i < result.size(); i++) //G제곱근 후꺼 출력
+	{
+		printf("%d ", result[i]);
+	}
+	printf("%d ", G);
+	return 0;
+}
