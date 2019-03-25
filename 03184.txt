@@ -1,0 +1,61 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+int n, m;
+char buffer[252][252];
+bool check[252][252];
+int dir[4][2] = { {-1,0},{0,1},{1,0},{0,-1} };
+int wolf = 0;
+int sheep = 0;
+int total_wolf = 0;
+int total_sheep = 0;
+void dfs(int x, int y)  //
+{
+
+	if (x < 0 || y < 0 || x >= n || y >= m)return;   //배열 인덱스 넘기면 반환
+	if (check[x][y])return;            
+	if (buffer[x][y] == '#')return;
+	check[x][y] = true;
+	if (buffer[x][y] == 'v')wolf++;
+	if (buffer[x][y] == 'o')sheep++;
+	for (int d = 0; d < 4; d++)
+	{
+		int nextx = x + dir[d][0];
+		int nexty = y + dir[d][1];
+		dfs(nextx, nexty);
+	}
+}
+
+int main()
+{
+	cin >> n >> m;
+	for (int i = 0; i < n; i++)
+	{
+		string str;
+		cin >> str;
+		for (int j = 0; j < m; j++)
+		{
+			buffer[i][j] = str[j];
+		}
+	}
+
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)  //모든 배열을 탐색
+		{
+			if (check[i][j])continue;   //이미 체크했으면 넘기기
+			if (buffer[i][j]=='#')continue;  //울타리 넘기기
+			dfs(i, j);   //해당부분 dfs 돌려 해당영역 탐색
+			if (wolf >= sheep)total_wolf += wolf;  
+			else total_sheep += sheep;
+
+			wolf = 0;     //초기화
+			sheep = 0;
+		}
+	}
+
+	printf("%d %d", total_sheep, total_wolf);
+
+	return 0;
+}
