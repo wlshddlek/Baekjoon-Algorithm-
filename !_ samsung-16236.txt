@@ -1,0 +1,112 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+using namespace std;
+int buffer[22][22];
+int n;
+int babyx;
+int babyy;
+int baby_size = 2;
+int dir[4][2] = { {-1,0},{0,1},{1,0},{0,-1} }; 
+int time = 0;
+int prey = 0;
+bool check[22][22];
+
+class shark   //상어위치정보 객체
+{
+public:
+	int x;
+	int y;
+	int distance;
+
+	shark(int a, int b, int c)
+	{
+		x = a;
+		y = b;
+		distance = c;
+	}
+	bool operator<(shark &other)   //정렬을 위해 
+	{
+		if (distance != other.distance)return distance < other.distance;
+		
+		if (x != other.x)return x < other.x;
+
+		return y < other.y;
+	}
+
+};
+vector<shark> v;   //먹이 위치들 저장
+bool bfs()
+{
+	queue<shark>q;
+	q.push(shark(babyx, babyy, 0));
+	fill(&check[0][0], &check[21][21], false);  //check를 리셋
+	v.clear(); //벡터클린
+	while (!q.empty())  //bfs
+	{
+		int x = q.front().x;
+		int y = q.front().y;
+		int distance = q.front().distance;
+
+		q.pop();
+		if (buffer[x][y] != 0 && buffer[x][y] < baby_size) //먹이찾으면 벡터에 저장
+		{
+			v.push_back(shark(x, y, distance));
+		}
+		for (int d = 0; d < 4; d++)
+		{
+			int nextx = x + dir[d][0];
+			int nexty = y + dir[d][1];
+			if (nextx < 0 || nexty < 0 || nextx >= n || nexty >= n)continue;
+			if (buffer[nextx][nexty] > baby_size)continue; //사이즈보다 크면 못지나감
+			if (check[nextx][nexty]==true)continue;
+			check[nextx][nexty] = true;
+			q.push(shark(nextx,nexty, distance + 1));
+		}
+
+	}
+
+	if (v.size() == 0)return false;
+	sort(v.begin(), v.end()); //먹이들정렬
+	
+	babyx = v[0].x;  //최적의 먹이
+	babyy = v[0].y;
+	time += v[0].distance; //매번 거리 더하기, 즉 시간을 더하기
+	buffer[babyx][babyy] = 0;  //먹은 위치는 0으로 초기화
+	prey++;  //누적 먹이 증가
+	if (prey == baby_size)  //누적 먹이가 아기사이즈되면 아기사이즈 증가
+	{
+		prey = 0;
+		baby_size++;
+	}
+	
+	return true;
+}
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			cin >> buffer[i][j];
+			if (buffer[i][j] == 9) 
+			{
+				babyx = i;
+				babyy = j;
+				buffer[i][j] = 0;
+			}
+		}
+	}
+
+	while (1)
+	{
+		
+		if (bfs() == false)break;  //더이상 찾을게 업으면 종료 및 엄마호출
+	}
+	printf("%d ", time);
+
+
+	return 0;
+}

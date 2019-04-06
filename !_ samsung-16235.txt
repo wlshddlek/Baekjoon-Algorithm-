@@ -1,0 +1,117 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+int n, m, k;
+int food[12][12];
+int plus_food[12][12];
+vector<int> buffer[12][12];
+int dir[8][2] = { {-1,0},{0,1},{1,0},{0,-1},{1,1},{-1,-1},{-1,1},{1,-1} }; 
+void spring()  //봄 ,여름
+{
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			
+			int k = 0;
+			for (; k < buffer[i][j].size(); k++)//어린나무부터 양분 먹이기
+			{
+				if (food[i][j] >= buffer[i][j][k])
+				{
+					food[i][j] -= buffer[i][j][k];
+					buffer[i][j][k]++;
+				}
+				else break;
+			}
+			while(buffer[i][j].size()>k)   //양분 못먹는 나무들 다 죽이기 			  
+			{
+					food[i][j] += buffer[i][j][buffer[i][j].size()-1]/2;
+					buffer[i][j].pop_back();
+			}
+			
+		}
+	}
+
+}
+void breeding(int x, int y)  //번식하기
+{
+	for (int d = 0; d < 8; d++)
+	{
+		int nextx = x + dir[d][0];
+		int nexty = y + dir[d][1];
+		if (nextx<1 || nexty<1 || nextx>n || nexty>n)continue;
+		buffer[nextx][nexty].push_back(1);
+		for (int i = buffer[nextx][nexty].size()-2; i>=0;i--)//처음부분으로 넣어주기,, deque쓰거나 그냥 거꾸로 넣게 만들면 굳이 이 과정 필요없긴함
+		{
+			buffer[nextx][nexty][i + 1] = buffer[nextx][nexty][i];
+		}
+		buffer[nextx][nexty][0] = 1;
+	}
+
+}
+void fall()
+{
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			for (int k = 0; k < buffer[i][j].size(); k++)
+			{
+				if (buffer[i][j][k] % 5 == 0) //5의배수나이 나무면 번식
+				{
+					breeding(i, j);   
+				}
+
+			}
+		}
+	}
+
+}
+void winter()   //양분 추가
+{
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			food[i][j] += plus_food[i][j];
+		}
+	}
+
+}
+int main()
+{
+	cin >> n >> m >> k;
+	fill(&food[0][0], &food[11][11], 5);   //처음 초기 양분 초기화
+
+	for (int i = 1; i <= n; i++)     //겨울에 추가해줄 양분 입력
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			cin >> plus_food[i][j];
+		}
+	}
+	for (int i = 0; i < m; i++)   //심을 나무 위치와 나이 입력
+	{
+		int x, y, z;
+		cin >> x >> y >> z;
+		buffer[x][y].push_back(z);
+	}
+
+	for (int i = 0; i < k; i++)   //봄 여름 겨울 가을 시뮬레이션 돌리기
+	{
+		spring();
+		fall();
+		winter();
+	}
+	int total_tree = 0;
+	for (int i = 1; i <= n; i++)    //총 살아있는 나무 더해주기
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			total_tree += buffer[i][j].size();
+		}
+	}
+	printf("%d ", total_tree);
+	return 0;
+}
