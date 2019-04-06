@@ -1,0 +1,77 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+using namespace std;
+
+int n, l, r;
+int map[52][52];
+bool check[52][52];
+int dir[4][2] = { {-1,0},{0,1},{1,0},{0,-1} };
+vector<pair<int, int>>v; //연합국가좌표들 넣기
+int sum = 0;
+int coun = 0;
+void bfs(int x ,int y) //연합국가찾기
+{
+	queue<pair<int,int>> q;
+	q.push(make_pair(x, y));
+	check[x][y] = true;
+	while (!q.empty())
+	{
+		int x = q.front().first;
+		int y = q.front().second;
+		v.push_back(make_pair(x, y));
+		sum += map[x][y];   //연합국가사람들 수 더해주기
+		coun++;       //연합국가 수 카운팅
+		q.pop();
+		for (int d = 0; d < 4; d++)
+		{
+			int nextx = x + dir[d][0];
+			int nexty = y + dir[d][1];
+			if (nextx<1 || nexty<1 || nextx>n || nexty>n)continue;
+			if (check[nextx][nexty] == true)continue;
+			if (abs(map[nextx][nexty] - map[x][y]) < l || abs(map[nextx][nexty] - map[x][y]) > r)continue;  //l이상 r이하 사람차이가 나지않으면 버리기
+			check[nextx][nexty] = true;
+			
+			q.push(make_pair(nextx, nexty));
+		}
+	}
+}
+int main()
+{
+	cin >> n >> l >> r;
+
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			cin >> map[i][j];
+		}
+	}
+	int move = 0;
+	while (1)
+	{
+		fill(&check[0][0], &check[51][51], 0);
+		int isfinish = true;
+		for (int i = 1; i <= n; i++)
+		{
+			for (int j = 1; j <= n; j++)
+			{
+				sum = 0;   //초기화
+				coun = 0;  //초기화
+				v.clear(); //초기화
+				if (check[i][j] == true)continue;
+				bfs(i, j);     //연합국가 찾기
+				if (coun > 1)isfinish = false; 
+				int result = sum / coun;  //연합국가사람 분리값
+				for (int i = 0; i < v.size() ;i++)
+				{
+					map[v[i].first][v[i].second] = result; //사람 분리하기
+				}			
+			}
+		}
+		if (isfinish == true)break; //연합국가가 하나도안만들어지면 종료
+		move++;
+	}
+	printf("%d ", move);
+	return 0;
+}
