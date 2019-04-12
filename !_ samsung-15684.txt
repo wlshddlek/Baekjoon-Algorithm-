@@ -1,0 +1,77 @@
+#include<iostream>
+
+using namespace std;
+int n, m, h;
+bool buffer[33][13];
+bool isright = false;
+bool play(int x)  //해당숫자에서 사다리타기 게임하기
+{
+	int result = x;
+	for (int i = 1; i <= h; i++) 
+	{
+		if (buffer[i][x]==true)
+		{
+			x++;
+		}
+		else if (buffer[i][x - 1] == true)
+		{
+			x--;
+		}
+	}
+	return x == result;
+}
+bool total_play()   //사다리타기 전부 하기
+{
+	int iscorrect = true;
+	for (int i = 1; i <= n; i++)
+	{
+		if (play(i) == false)return false;
+	}
+	return true;
+}
+void dfs(int count,int starti,int startj)   //입력한 숫자개만큼 가로선 모든경우 추가하기
+{
+	if (count == 0)
+	{
+		if (total_play() == true)isright = true;
+		return;
+	}
+	bool isfirst = true;
+	for (int i = starti; i <= h; i++)
+	{
+		int j;
+		if (isfirst)j = startj;
+		else j = 1;
+		for (; j <= n; j++)
+		{
+			
+			if (buffer[i][j] == true)continue;
+			buffer[i][j] = true;
+			dfs(count - 1, i,j+1);
+			buffer[i][j] = false;
+		}
+		isfirst = false;
+	}
+}
+int main()
+{
+	cin >> n >> m >> h;
+	for (int i = 0; i < m; i++)
+	{
+		int a, b;
+		cin >> a >> b;
+		buffer[a][b] = true;
+	}
+	int result = -1;
+	for (int i = 0;  i < 4; i++)  //추가하는 가로선 개수 하나씩 늘려가며 확인해보기 3넘어가면 그냥 -1
+	{
+		dfs(i, 1, 1);
+		if(isright)
+		{
+			result = i;
+			break;
+		}
+	}
+	printf("%d ", result);
+	return 0;
+}

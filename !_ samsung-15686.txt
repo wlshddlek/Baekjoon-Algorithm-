@@ -1,0 +1,75 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+#include<math.h>
+using namespace std;
+int buffer[52][52];
+int n, m;
+vector<pair<int,int>> v;
+vector<pair<int, int>>v2;
+int minn = 99999;
+bool check_store[5000];
+int distance(int x, int y)  //집마다 가게하고의 거리 비교해서 젤 작은거리 출력 -> 집의 치킨거리
+{
+	int minn2 = 99999;
+	for (int i = 0; i < v.size(); i++)
+	{
+		if (check_store[i] == false)continue;
+		int x2 = v[i].first;
+		int y2 = v[i].second;
+		minn2 = min(minn2, abs(x2 - x) + abs(y2 - y));
+	}
+	return minn2;
+}
+int chicken_distance() // m개 고른 가게와 집들의 치킨거리 더하기 
+{
+	int sum = 0;
+	
+	for (int i = 0; i < v2.size(); i++)
+	{
+		int x = v2[i].first;
+		int y = v2[i].second;
+		sum += distance(x, y);
+	}
+	return sum;
+}
+void dfs(int count,int start)  //치킨집 m개 고르기 , 벡터에서 치킨집 m개 고르는 모든경우 파악
+{
+	if (count == m+1 )
+	{
+		minn = min(minn, chicken_distance());
+		return;
+	}
+	for (int i = start; i < v.size() ;i++)
+	{
+	
+		if (check_store[i] == true)continue;
+		check_store[i] = true;
+		dfs(count+1,i+1);
+		check_store[i] = false;	
+	}
+}
+int main()
+{
+	cin >> n >> m;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			cin >> buffer[i][j];
+			if (buffer[i][j] == 2)   //치킨집 모두 벡터에 저장
+			{
+				v.push_back(make_pair(i, j));
+				buffer[i][j] = 0;
+			}
+			else if (buffer[i][j] == 1)
+			{
+				v2.push_back(make_pair(i, j));  //집 저장 -> 벡터로 안하고 그냥 다 탐색하는식으로하면 시간초과남
+			}
+		}
+	}
+	dfs(1, 0);
+	printf("%d ", minn);
+	return 0;
+}

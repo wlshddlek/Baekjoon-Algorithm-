@@ -1,0 +1,59 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int n;
+int dir[4][2] = { {1,0},{0,-1},{-1,0},{0,1} };
+bool check[102][102];
+vector<int>v;
+vector<int>tmp;
+
+void dragon(int x, int y, int d, int g)
+{
+	v.clear();
+	v.push_back(d);  //시작 방향 저장
+	for (int i = 0; i < g; i++)
+	{
+		tmp.clear();
+		for (int j = v.size()-1; j>=0; j--) //90도 회전시킨 방향들 저장
+		{
+			int dir = (v[j] + 1) % 4;
+			tmp.push_back(dir);
+		}
+		for (int j = 0; j < tmp.size(); j++) //회전시킨거 이어주기
+		{
+			v.push_back(tmp[j]);
+		}	
+	}
+	check[x][y] = true;
+	for (int i = 0; i < v.size(); i++)
+	{
+		x = x + dir[v[i]][0];
+		y = y + dir[v[i]][1];
+
+		check[x][y] = true;
+	}
+}
+int main()
+{
+	cin >> n;
+
+	for (int i = 0; i < n; i++)
+	{
+		int x, y, d, g;
+		cin >> x >> y >> d >> g;
+		dragon(x, y, d, g);
+	}
+	int result = 0;
+	for (int i = 0; i < 100; i++)
+	{
+		for (int j = 0; j < 100; j++)
+		{
+			int count = 0;
+			count = check[i][j] + check[i][j + 1] + check[i + 1][j] + check[i + 1][j + 1];  //4개 다더해서 4면 모든 꼭지점이 체크라는거
+			if (count == 4)result++;
+		}
+	}
+	printf("%d ", result);
+	return 0;
+}
